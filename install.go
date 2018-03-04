@@ -18,7 +18,7 @@ import (
 	"k8s.io/kubernetes/pkg/kubectl/plugins"
 )
 
-func NewCmdInstall() *cobra.Command {
+func NewCmdInstall(rootCmd *cobra.Command) *cobra.Command {
 	cmd := &cobra.Command{
 		Use:               "install",
 		Short:             "Install as kubectl plugin",
@@ -34,8 +34,6 @@ func NewCmdInstall() *cobra.Command {
 			for _, v := range e {
 				fmt.Println(v)
 			}
-
-			rootCmd := NewRootCmd()
 
 			dir := filepath.Join(homedir.HomeDir(), ".kube", "plugins", rootCmd.Name())
 			os.MkdirAll(dir, 0755)

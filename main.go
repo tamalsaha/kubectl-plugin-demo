@@ -37,7 +37,7 @@ func NewRootCmd() *cobra.Command {
 	rootCmd.PersistentFlags().BoolVar(&enableAnalytics, "analytics", enableAnalytics, "Send analytical events to Google Analytics")
 
 	rootCmd.AddCommand(NewCmdCheck())
-	rootCmd.AddCommand(NewCmdInstall())
+	rootCmd.AddCommand(NewCmdInstall(rootCmd))
 	return rootCmd
 }
 
