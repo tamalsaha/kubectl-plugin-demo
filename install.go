@@ -6,7 +6,12 @@ import (
 	"sort"
 	"strings"
 
+	"github.com/appscode/go/runtime"
+	"github.com/kardianos/osext"
 	"github.com/spf13/cobra"
+	"path/filepath"
+	"github.com/appscode/go/log"
+	"github.com/appscode/go/ioutil"
 )
 
 func NewCmdInstall() *cobra.Command {
@@ -26,6 +31,15 @@ func NewCmdInstall() *cobra.Command {
 				fmt.Println(v)
 			}
 
+			dir := runtime.GOPath() + "/src/github.com/tamalsaha/kubectl-plugin-demo/demo"
+			os.MkdirAll(dir, 0755)
+
+			p, err := osext.Executable()
+			if err != nil {
+				log.Fatal(err)
+			}
+			p = filepath.Clean(p)
+			ioutil.CopyFile(filepath.Join(dir, filepath.Base(p)), p, 0755)
 		},
 	}
 	return cmd
