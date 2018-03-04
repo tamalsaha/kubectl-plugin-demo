@@ -8,7 +8,10 @@ import (
 	"github.com/appscode/go/log"
 	logs "github.com/appscode/go/log/golog"
 
-	"github.com/golang/glog"
+	"os"
+	"sort"
+	"strings"
+
 	"github.com/spf13/cobra"
 	"github.com/spf13/pflag"
 	metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
@@ -48,6 +51,17 @@ func NewCmdCheck() *cobra.Command {
 		Short:             "Check restic backup",
 		DisableAutoGenTag: true,
 		Run: func(cmd *cobra.Command, args []string) {
+			var e []string
+			for _, pair := range os.Environ() {
+				if strings.HasPrefix(pair, "KUBECTL_") {
+					e = append(e, pair)
+				}
+			}
+			sort.Strings(e)
+			for _, v := range e {
+				fmt.Println(v)
+			}
+
 			config, err := clientcmd.BuildConfigFromFlags(masterURL, kubeconfigFile)
 			if err != nil {
 				log.Fatalln(err)
@@ -58,35 +72,7 @@ func NewCmdCheck() *cobra.Command {
 				log.Fatalln(err)
 			}
 			for _, node := range nodes.Items {
-				// ---------------------------------
-
-				fmt.Println("glog.Infoln_____")
-				glog.Infoln(node.Name)
-
-				fmt.Println("glog.Warningln_____")
-				glog.Warningln(node.Name)
-
-				fmt.Println("glog.Errorln_____")
-				glog.Errorln(node.Name)
-
-				// ---------------------------------
-
-				fmt.Println("glog.V(0).Infoln_____")
-				glog.V(0).Infoln(node.Name)
-
-				fmt.Println("glog.V(1).Infoln_____")
-				glog.V(1).Infoln(node.Name)
-
-				fmt.Println("glog.V(2).Infoln_____")
-				glog.V(2).Infoln(node.Name)
-
-				fmt.Println("glog.V(3).Infoln_____")
-				glog.V(3).Infoln(node.Name)
-
-				fmt.Println("glog.V(4).Infoln_____")
-				glog.V(4).Infoln(node.Name)
-
-				break
+				fmt.Println(node.Name)
 			}
 		},
 	}
