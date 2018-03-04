@@ -7,14 +7,14 @@ import (
 	"os"
 	"sort"
 	"strings"
-"k8s.io/kubernetes/pkg/kubectl/cmd/util"
+
 	"github.com/appscode/go/log"
 	logs "github.com/appscode/go/log/golog"
 	"github.com/spf13/cobra"
 	"github.com/spf13/pflag"
 	metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
 	"k8s.io/client-go/kubernetes"
-	"k8s.io/client-go/tools/clientcmd"
+	"k8s.io/kubernetes/pkg/kubectl/cmd/util"
 )
 
 func NewRootCmd() *cobra.Command {
@@ -42,10 +42,6 @@ func NewRootCmd() *cobra.Command {
 }
 
 func NewCmdCheck() *cobra.Command {
-	var (
-		masterURL      string
-		kubeconfigFile string
-	)
 	cmd := &cobra.Command{
 		Use:               "check",
 		Short:             "Check restic backup",
@@ -62,9 +58,15 @@ func NewCmdCheck() *cobra.Command {
 				fmt.Println(v)
 			}
 
-			util.DefaultClientConfig(cmd.Flags())
+			clientConfig := util.DefaultClientConfig(cmd.Flags())
 
-			config, err := clientcmd.BuildConfigFromFlags(masterURL, kubeconfigFile)
+			namespace, _, err := clientConfig.Namespace()
+			if err != nil {
+				log.Fatalln(err)
+			}
+			fmt.Println("namespace = ", namespace)
+
+			config, err := clientConfig.ClientConfig()
 			if err != nil {
 				log.Fatalln(err)
 			}
@@ -78,8 +80,6 @@ func NewCmdCheck() *cobra.Command {
 			}
 		},
 	}
-	cmd.Flags().StringVar(&masterURL, "master", masterURL, "The address of the Kubernetes API server (overrides any value in kubeconfig)")
-	cmd.Flags().StringVar(&kubeconfigFile, "kubeconfig", kubeconfigFile, "Path to kubeconfig file with authorization information (the master location is set by the master flag).")
 	return cmd
 }
 
