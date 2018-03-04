@@ -1,5 +1,5 @@
 hash: f0543c0c1e493cfa1242b3b701ca583de356e6225ab71f5b48c82a70ddfa502d
-updated: 2018-03-04T02:02:23.853499015-08:00
+updated: 2018-03-04T03:51:03.248932925-08:00
 imports:
 - name: github.com/appscode/go
   version: c312c0a1fe0d4988480073287b8633fc5a244647
@@ -246,4 +246,8 @@ imports:
   subpackages:
   - pkg/common
   - pkg/util/proto
+- name: k8s.io/kubernetes
+  version: 925c127ec6b946659ad0fd596fa959be43f0cc05
+  subpackages:
+  - pkg/kubectl/plugins
 testImports: []
