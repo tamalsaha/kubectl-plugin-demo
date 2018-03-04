@@ -22,8 +22,8 @@ func NewRootCmd() *cobra.Command {
 		enableAnalytics = true
 	)
 	var rootCmd = &cobra.Command{
-		Use:               "kubectl-plugin-demo",
-		Short:             `Log Demo`,
+		Use:               "tamal",
+		Short:             `Tamal's kubectl plugin'`,
 		DisableAutoGenTag: true,
 		PersistentPreRun: func(c *cobra.Command, args []string) {
 			c.Flags().VisitAll(func(flag *pflag.Flag) {
