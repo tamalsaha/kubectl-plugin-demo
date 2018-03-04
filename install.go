@@ -1,17 +1,20 @@
 package main
 
 import (
+	"bytes"
+	"encoding/json"
 	"fmt"
-	"os"
-	"sort"
-	"strings"
-
+	"github.com/appscode/go/ioutil"
+	"github.com/appscode/go/log"
 	"github.com/appscode/go/runtime"
 	"github.com/kardianos/osext"
 	"github.com/spf13/cobra"
+	"github.com/spf13/pflag"
+	"k8s.io/kubernetes/pkg/kubectl/plugins"
+	"os"
 	"path/filepath"
-	"github.com/appscode/go/log"
-	"github.com/appscode/go/ioutil"
+	"sort"
+	"strings"
 )
 
 func NewCmdInstall() *cobra.Command {
@@ -40,6 +43,42 @@ func NewCmdInstall() *cobra.Command {
 			}
 			p = filepath.Clean(p)
 			ioutil.CopyFile(filepath.Join(dir, filepath.Base(p)), p, 0755)
+
+			var traverse func(cmd *cobra.Command, p *plugins.Plugin)
+			traverse = func(cmd *cobra.Command, p *plugins.Plugin) {
+				p.Name = cmd.Name()
+				p.ShortDesc = cmd.Short
+				p.LongDesc = cmd.Long
+				p.Example = cmd.Example
+				p.Command = cmd.CommandPath()
+
+				cmd.LocalFlags().VisitAll(func(flag *pflag.Flag) {
+					if flag.Hidden {
+						return
+					}
+					p.Flags = append(p.Flags, plugins.Flag{
+						Name:      flag.Name,
+						Shorthand: flag.Shorthand,
+						Desc:      flag.Usage,
+						DefValue:  flag.DefValue,
+					})
+				})
+
+				for _, cc := range cmd.Commands() {
+					cp := &plugins.Plugin{}
+					traverse(cc, cp)
+					p.Tree = append(p.Tree, cp)
+				}
+			}
+
+			plugin := &plugins.Plugin{}
+			traverse(cmd, plugin)
+
+			data, err := json.MarshalIndent(plugin, "", "  ")
+			if err != nil {
+				log.Fatal(err)
+			}
+			ioutil.WriteFile(filepath.Join(dir, "plugins.yaml"), bytes.NewBuffer(data), 0755)
 		},
 	}
 	return cmd
