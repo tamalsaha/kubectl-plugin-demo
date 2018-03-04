@@ -32,3 +32,4 @@ apiserver.local.config/
 .markdownlint.json
 
 kubectl-plugin-demo
+demo/
