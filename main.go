@@ -22,6 +22,7 @@ func NewRootCmd() *cobra.Command {
 		enableAnalytics = true
 	)
 	var rootCmd = &cobra.Command{
+		Use:               "kubectl-plugin-demo",
 		Short:             `Log Demo`,
 		DisableAutoGenTag: true,
 		PersistentPreRun: func(c *cobra.Command, args []string) {

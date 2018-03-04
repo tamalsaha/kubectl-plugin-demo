@@ -2,19 +2,20 @@ package main
 
 import (
 	"bytes"
-	"encoding/json"
 	"fmt"
-	"github.com/appscode/go/ioutil"
-	"github.com/appscode/go/log"
-	"github.com/appscode/go/runtime"
-	"github.com/kardianos/osext"
-	"github.com/spf13/cobra"
-	"github.com/spf13/pflag"
-	"k8s.io/kubernetes/pkg/kubectl/plugins"
 	"os"
 	"path/filepath"
 	"sort"
 	"strings"
+
+	"github.com/appscode/go/ioutil"
+	"github.com/appscode/go/log"
+	"github.com/appscode/go/runtime"
+	"github.com/ghodss/yaml"
+	"github.com/kardianos/osext"
+	"github.com/spf13/cobra"
+	"github.com/spf13/pflag"
+	"k8s.io/kubernetes/pkg/kubectl/plugins"
 )
 
 func NewCmdInstall() *cobra.Command {
@@ -50,7 +51,7 @@ func NewCmdInstall() *cobra.Command {
 				p.ShortDesc = cmd.Short
 				p.LongDesc = cmd.Long
 				p.Example = cmd.Example
-				p.Command = cmd.CommandPath()
+				p.Command = "./" + strings.TrimSpace(cmd.CommandPath())
 
 				cmd.LocalFlags().VisitAll(func(flag *pflag.Flag) {
 					if flag.Hidden {
@@ -72,9 +73,9 @@ func NewCmdInstall() *cobra.Command {
 			}
 
 			plugin := &plugins.Plugin{}
-			traverse(cmd, plugin)
+			traverse(NewRootCmd(), plugin)
 
-			data, err := json.MarshalIndent(plugin, "", "  ")
+			data, err := yaml.Marshal(plugin)
 			if err != nil {
 				log.Fatal(err)
 			}
