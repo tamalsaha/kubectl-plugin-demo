@@ -1,19 +1,12 @@
 package: github.com/tamalsaha/kubectl-plugin-demo
 import:
 - package: github.com/appscode/go
-  subpackages:
-  - log
-  - log/golog
 - package: github.com/golang/glog
 - package: github.com/spf13/cobra
-  version: v0.0.1
+  version: master
 - package: github.com/spf13/pflag
   version: v1.0.0
 - package: k8s.io/apimachinery
-  subpackages:
-  - pkg/apis/meta/v1
+  version: kubernetes-1.9.0
 - package: k8s.io/client-go
   version: v6.0.0
-  subpackages:
-  - kubernetes
-  - tools/clientcmd
