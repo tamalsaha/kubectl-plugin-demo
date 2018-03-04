@@ -11,8 +11,8 @@ import (
 
 func NewCmdEnv() *cobra.Command {
 	cmd := &cobra.Command{
-		Use:               "list-nodes",
-		Short:             "List nodes",
+		Use:               "env",
+		Short:             "List environment variables",
 		DisableAutoGenTag: true,
 		Run: func(cmd *cobra.Command, args []string) {
 			var e []string

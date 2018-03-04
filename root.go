@@ -13,7 +13,7 @@ func NewRootCmd() *cobra.Command {
 		enableAnalytics = true
 	)
 	var rootCmd = &cobra.Command{
-		Use:               "tamal",
+		Use:               "kubectl-plugin-demo",
 		Short:             `Tamal's kubectl plugin'`,
 		DisableAutoGenTag: true,
 		PersistentPreRun: func(c *cobra.Command, args []string) {
