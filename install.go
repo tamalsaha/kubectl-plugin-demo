@@ -55,6 +55,18 @@ func NewCmdInstall() *cobra.Command {
 				p.Example = cmd.Example
 				p.Command = "./" + strings.TrimSpace(cmd.CommandPath())
 
+				cmd.InheritedFlags().VisitAll(func(flag *pflag.Flag) {
+					if flag.Hidden {
+						return
+					}
+					p.Flags = append(p.Flags, plugins.Flag{
+						Name:      flag.Name,
+						Shorthand: flag.Shorthand,
+						Desc:      flag.Usage,
+						DefValue:  flag.DefValue,
+					})
+				})
+
 				cmd.LocalFlags().VisitAll(func(flag *pflag.Flag) {
 					if flag.Hidden {
 						return
@@ -76,12 +88,14 @@ func NewCmdInstall() *cobra.Command {
 
 			plugin := &plugins.Plugin{}
 			traverse(rootCmd, plugin)
+			plugin.Command = ""
+			plugin.Flags = nil
 
 			data, err := yaml.Marshal(plugin)
 			if err != nil {
 				log.Fatal(err)
 			}
-			ioutil.WriteFile(filepath.Join(dir, "plugins.yaml"), bytes.NewBuffer(data), 0755)
+			ioutil.WriteFile(filepath.Join(dir, "plugin.yaml"), bytes.NewBuffer(data), 0755)
 		},
 	}
 	return cmd
