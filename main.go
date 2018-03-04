@@ -7,7 +7,7 @@ import (
 	"os"
 	"sort"
 	"strings"
-
+"k8s.io/kubernetes/pkg/kubectl/cmd/util"
 	"github.com/appscode/go/log"
 	logs "github.com/appscode/go/log/golog"
 	"github.com/spf13/cobra"
@@ -61,6 +61,8 @@ func NewCmdCheck() *cobra.Command {
 			for _, v := range e {
 				fmt.Println(v)
 			}
+
+			util.DefaultClientConfig(cmd.Flags())
 
 			config, err := clientcmd.BuildConfigFromFlags(masterURL, kubeconfigFile)
 			if err != nil {
