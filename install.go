@@ -10,11 +10,11 @@ import (
 
 	"github.com/appscode/go/ioutil"
 	"github.com/appscode/go/log"
-	"github.com/appscode/go/runtime"
 	"github.com/ghodss/yaml"
 	"github.com/kardianos/osext"
 	"github.com/spf13/cobra"
 	"github.com/spf13/pflag"
+	"k8s.io/client-go/util/homedir"
 	"k8s.io/kubernetes/pkg/kubectl/plugins"
 )
 
@@ -35,7 +35,9 @@ func NewCmdInstall() *cobra.Command {
 				fmt.Println(v)
 			}
 
-			dir := runtime.GOPath() + "/src/github.com/tamalsaha/kubectl-plugin-demo/demo"
+			rootCmd := NewRootCmd()
+
+			dir := filepath.Join(homedir.HomeDir(), ".kube", "plugins", rootCmd.Name())
 			os.MkdirAll(dir, 0755)
 
 			p, err := osext.Executable()
@@ -73,7 +75,7 @@ func NewCmdInstall() *cobra.Command {
 			}
 
 			plugin := &plugins.Plugin{}
-			traverse(NewRootCmd(), plugin)
+			traverse(rootCmd, plugin)
 
 			data, err := yaml.Marshal(plugin)
 			if err != nil {
