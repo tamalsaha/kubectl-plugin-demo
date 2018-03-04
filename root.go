@@ -2,11 +2,12 @@ package main
 
 import (
 	"flag"
-	stdlog "log"
+	//stdlog "log"
 	"os"
 
 	"github.com/spf13/cobra"
 	"github.com/spf13/pflag"
+	utilflag "k8s.io/apiserver/pkg/util/flag"
 	"k8s.io/client-go/tools/clientcmd"
 	"k8s.io/kubernetes/pkg/kubectl/cmd/util"
 	"k8s.io/kubernetes/pkg/kubectl/plugins"
@@ -21,14 +22,20 @@ func NewRootCmd(plugin bool) *cobra.Command {
 		Short:             `Tamal's kubectl plugin'`,
 		DisableAutoGenTag: true,
 		PersistentPreRun: func(c *cobra.Command, args []string) {
-			c.Flags().VisitAll(func(flag *pflag.Flag) {
-				stdlog.Printf("FLAG: --%s=%q", flag.Name, flag.Value)
-			})
+			//c.Flags().VisitAll(func(flag *pflag.Flag) {
+			//	stdlog.Printf("FLAG: --%s=%q", flag.Name, flag.Value)
+			//})
 		},
 	}
+	util.NewFactory(nil)
+
 	flags := rootCmd.PersistentFlags()
 	clientConfig := util.DefaultClientConfig(flags)
-	rootCmd.PersistentFlags().AddGoFlagSet(flag.CommandLine)
+	flags.AddGoFlagSet(flag.CommandLine)
+
+	// Normalize all flags that are coming from other packages or pre-configurations
+	// a.k.a. change all "_" to "-". e.g. glog package
+	flags.SetNormalizeFunc(utilflag.WordSepNormalizeFunc)
 	if plugin {
 		processKubectlFlag(rootCmd.PersistentFlags(), clientcmd.FlagClusterName)
 		processKubectlFlag(rootCmd.PersistentFlags(), clientcmd.FlagAuthInfoName)

@@ -1,5 +1,5 @@
-hash: f0543c0c1e493cfa1242b3b701ca583de356e6225ab71f5b48c82a70ddfa502d
-updated: 2018-03-04T04:54:24.851563293-08:00
+hash: e0a4335f111bca22515577093e6129ea34df5872e33ec31f5457e796ac4079ca
+updated: 2018-03-04T14:21:00.971616658-08:00
 imports:
 - name: cloud.google.com/go
   version: 3b1ae45394a234c385be014e9a488f2bb6eef821
@@ -233,7 +233,6 @@ imports:
   version: e7e903064f5e9eb5da98208bae10b475d4db0f8c
   subpackages:
   - prometheus
-  - prometheus/promhttp
 - name: github.com/prometheus/client_model
   version: fa8ad6fec33561be4280a8f0514318c79d7f6cb6
   subpackages:
@@ -265,6 +264,11 @@ imports:
 - name: golang.org/x/crypto
   version: 81e90905daefcd6fd217b62423c0908922eadb30
   subpackages:
+  - bcrypt
+  - blowfish
+  - nacl/secretbox
+  - poly1305
+  - salsa20/salsa
   - ssh/terminal
 - name: golang.org/x/net
   version: 1c05540f6879653db88113bc4a2b70aec4bd491f
@@ -334,7 +338,7 @@ imports:
 - name: gopkg.in/yaml.v2
   version: 53feefa2559fb8dfa8d81baad31be332c97d6c77
 - name: k8s.io/api
-  version: 11147472b7c934c474a2c484af3c0c5210b7a3af
+  version: af4bc157c3a209798fc897f6d4aaaaeb6c2e0d6a
   subpackages:
   - admission/v1beta1
   - admissionregistration/v1alpha1
@@ -427,7 +431,7 @@ imports:
   - third_party/forked/golang/netutil
   - third_party/forked/golang/reflect
 - name: k8s.io/apiserver
-  version: 1270e9f1ad9eaf6127691df90af0836f7e152495
+  version: 91e14f394e4796abf5a994a349a222e7081d86b6
   subpackages:
   - pkg/apis/audit
   - pkg/authentication/authenticator
