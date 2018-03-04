@@ -4,14 +4,12 @@ import (
 	"flag"
 	"fmt"
 	stdlog "log"
-
-	"github.com/appscode/go/log"
-	logs "github.com/appscode/go/log/golog"
-
 	"os"
 	"sort"
 	"strings"
 
+	"github.com/appscode/go/log"
+	logs "github.com/appscode/go/log/golog"
 	"github.com/spf13/cobra"
 	"github.com/spf13/pflag"
 	metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
@@ -32,12 +30,13 @@ func NewRootCmd() *cobra.Command {
 			})
 		},
 	}
-	rootCmd.PersistentFlags().AddGoFlagSet(flag.CommandLine)
+	// rootCmd.PersistentFlags().AddGoFlagSet(flag.CommandLine)
 	// ref: https://github.com/kubernetes/kubernetes/issues/17162#issuecomment-225596212
 	flag.CommandLine.Parse([]string{})
 	rootCmd.PersistentFlags().BoolVar(&enableAnalytics, "analytics", enableAnalytics, "Send analytical events to Google Analytics")
 
 	rootCmd.AddCommand(NewCmdCheck())
+	rootCmd.AddCommand(NewCmdInstall())
 	return rootCmd
 }
 
