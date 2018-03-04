@@ -2,10 +2,8 @@ package main
 
 import (
 	"bytes"
-	"fmt"
 	"os"
 	"path/filepath"
-	"sort"
 	"strings"
 
 	"github.com/appscode/go/ioutil"
@@ -24,16 +22,7 @@ func NewCmdInstall(rootCmd *cobra.Command) *cobra.Command {
 		Short:             "Install as kubectl plugin",
 		DisableAutoGenTag: true,
 		Run: func(cmd *cobra.Command, args []string) {
-			var e []string
-			for _, pair := range os.Environ() {
-				if strings.HasPrefix(pair, "KUBECTL_") {
-					e = append(e, pair)
-				}
-			}
-			sort.Strings(e)
-			for _, v := range e {
-				fmt.Println(v)
-			}
+			hideKubectlPlugin(cmd.Flags())
 
 			dir := filepath.Join(homedir.HomeDir(), ".kube", "plugins", rootCmd.Name())
 			os.MkdirAll(dir, 0755)

@@ -30,28 +30,13 @@ func NewRootCmd(plugin bool) *cobra.Command {
 	util.NewFactory(nil)
 
 	flags := rootCmd.PersistentFlags()
-	clientConfig := util.DefaultClientConfig(flags)
 	flags.AddGoFlagSet(flag.CommandLine)
-
 	// Normalize all flags that are coming from other packages or pre-configurations
 	// a.k.a. change all "_" to "-". e.g. glog package
 	flags.SetNormalizeFunc(utilflag.WordSepNormalizeFunc)
+	clientConfig := util.DefaultClientConfig(flags)
 	if plugin {
-		processKubectlFlag(rootCmd.PersistentFlags(), clientcmd.FlagClusterName)
-		processKubectlFlag(rootCmd.PersistentFlags(), clientcmd.FlagAuthInfoName)
-		processKubectlFlag(rootCmd.PersistentFlags(), clientcmd.FlagContext)
-		processKubectlFlag(rootCmd.PersistentFlags(), clientcmd.FlagNamespace)
-		processKubectlFlag(rootCmd.PersistentFlags(), clientcmd.FlagAPIServer)
-		processKubectlFlag(rootCmd.PersistentFlags(), clientcmd.FlagInsecure)
-		processKubectlFlag(rootCmd.PersistentFlags(), clientcmd.FlagCertFile)
-		processKubectlFlag(rootCmd.PersistentFlags(), clientcmd.FlagKeyFile)
-		processKubectlFlag(rootCmd.PersistentFlags(), clientcmd.FlagCAFile)
-		processKubectlFlag(rootCmd.PersistentFlags(), clientcmd.FlagBearerToken)
-		processKubectlFlag(rootCmd.PersistentFlags(), clientcmd.FlagImpersonate)
-		processKubectlFlag(rootCmd.PersistentFlags(), clientcmd.FlagImpersonateGroup)
-		processKubectlFlag(rootCmd.PersistentFlags(), clientcmd.FlagUsername)
-		processKubectlFlag(rootCmd.PersistentFlags(), clientcmd.FlagPassword)
-		processKubectlFlag(rootCmd.PersistentFlags(), clientcmd.FlagTimeout)
+		processKubectlPlugin(rootCmd.PersistentFlags())
 	}
 	// rootCmd.PersistentFlags().AddGoFlagSet(flag.CommandLine)
 	// ref: https://github.com/kubernetes/kubernetes/issues/17162#issuecomment-225596212
@@ -64,7 +49,63 @@ func NewRootCmd(plugin bool) *cobra.Command {
 	return rootCmd
 }
 
-func processKubectlFlag(flags *pflag.FlagSet, name string) {
+func processKubectlPlugin(flags *pflag.FlagSet) {
+	loadFromEnv(flags, "kubeconfig")
+	loadFromEnv(flags, clientcmd.FlagClusterName)
+	loadFromEnv(flags, clientcmd.FlagAuthInfoName)
+	loadFromEnv(flags, clientcmd.FlagContext)
+	loadFromEnv(flags, clientcmd.FlagNamespace)
+	loadFromEnv(flags, clientcmd.FlagAPIServer)
+	loadFromEnv(flags, clientcmd.FlagInsecure)
+	loadFromEnv(flags, clientcmd.FlagCertFile)
+	loadFromEnv(flags, clientcmd.FlagKeyFile)
+	loadFromEnv(flags, clientcmd.FlagCAFile)
+	loadFromEnv(flags, clientcmd.FlagBearerToken)
+	loadFromEnv(flags, clientcmd.FlagImpersonate)
+	loadFromEnv(flags, clientcmd.FlagImpersonateGroup)
+	loadFromEnv(flags, clientcmd.FlagUsername)
+	loadFromEnv(flags, clientcmd.FlagPassword)
+	loadFromEnv(flags, clientcmd.FlagTimeout)
+
+	loadFromEnv(flags, "alsologtostderr")
+	loadFromEnv(flags, "log-backtrace-at")
+	loadFromEnv(flags, "log-dir")
+	loadFromEnv(flags, "logtostderr")
+	loadFromEnv(flags, "stderrthreshold")
+	loadFromEnv(flags, "v")
+	loadFromEnv(flags, "vmodule")
+}
+
+func loadFromEnv(flags *pflag.FlagSet, name string) {
 	flags.Set(name, os.Getenv(plugins.FlagToEnvName(name, "KUBECTL_PLUGINS_GLOBAL_FLAG_")))
 	flags.MarkHidden(name)
+}
+
+func hideKubectlPlugin(flags *pflag.FlagSet) {
+	return
+
+	flags.MarkHidden("kubeconfig")
+	flags.MarkHidden(clientcmd.FlagClusterName)
+	flags.MarkHidden(clientcmd.FlagAuthInfoName)
+	flags.MarkHidden(clientcmd.FlagContext)
+	flags.MarkHidden(clientcmd.FlagNamespace)
+	flags.MarkHidden(clientcmd.FlagAPIServer)
+	flags.MarkHidden(clientcmd.FlagInsecure)
+	flags.MarkHidden(clientcmd.FlagCertFile)
+	flags.MarkHidden(clientcmd.FlagKeyFile)
+	flags.MarkHidden(clientcmd.FlagCAFile)
+	flags.MarkHidden(clientcmd.FlagBearerToken)
+	flags.MarkHidden(clientcmd.FlagImpersonate)
+	flags.MarkHidden(clientcmd.FlagImpersonateGroup)
+	flags.MarkHidden(clientcmd.FlagUsername)
+	flags.MarkHidden(clientcmd.FlagPassword)
+	flags.MarkHidden(clientcmd.FlagTimeout)
+
+	flags.MarkHidden("alsologtostderr")
+	flags.MarkHidden("log-backtrace-at")
+	flags.MarkHidden("log-dir")
+	flags.MarkHidden("logtostderr")
+	flags.MarkHidden("stderrthreshold")
+	flags.MarkHidden("v")
+	flags.MarkHidden("vmodule")
 }
