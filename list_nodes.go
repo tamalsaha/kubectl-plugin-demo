@@ -7,17 +7,15 @@ import (
 	"github.com/spf13/cobra"
 	metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
 	"k8s.io/client-go/kubernetes"
-	"k8s.io/kubernetes/pkg/kubectl/cmd/util"
+	"k8s.io/client-go/tools/clientcmd"
 )
 
-func NewCmdListNodes() *cobra.Command {
+func NewCmdListNodes(clientConfig clientcmd.ClientConfig) *cobra.Command {
 	cmd := &cobra.Command{
 		Use:               "list-nodes",
 		Short:             "List nodes",
 		DisableAutoGenTag: true,
 		Run: func(cmd *cobra.Command, args []string) {
-			clientConfig := util.DefaultClientConfig(cmd.Flags())
-
 			namespace, _, err := clientConfig.Namespace()
 			if err != nil {
 				log.Fatalln(err)

@@ -6,9 +6,11 @@ import (
 
 	"github.com/spf13/cobra"
 	"github.com/spf13/pflag"
+	"k8s.io/client-go/tools/clientcmd"
+	"k8s.io/kubernetes/pkg/kubectl/cmd/util"
 )
 
-func NewRootCmd() *cobra.Command {
+func NewRootCmd(plugin bool) *cobra.Command {
 	var (
 		enableAnalytics = true
 	)
@@ -22,12 +24,19 @@ func NewRootCmd() *cobra.Command {
 			})
 		},
 	}
+	var clientConfig clientcmd.ClientConfig
+	if plugin {
+
+	} else {
+		clientConfig = util.DefaultClientConfig(rootCmd.PersistentFlags())
+		rootCmd.PersistentFlags().AddGoFlagSet(flag.CommandLine)
+	}
 	// rootCmd.PersistentFlags().AddGoFlagSet(flag.CommandLine)
 	// ref: https://github.com/kubernetes/kubernetes/issues/17162#issuecomment-225596212
 	flag.CommandLine.Parse([]string{})
 	rootCmd.PersistentFlags().BoolVar(&enableAnalytics, "analytics", enableAnalytics, "Send analytical events to Google Analytics")
 
-	rootCmd.AddCommand(NewCmdListNodes())
+	rootCmd.AddCommand(NewCmdListNodes(clientConfig))
 	rootCmd.AddCommand(NewCmdEnv())
 	rootCmd.AddCommand(NewCmdInstall(rootCmd))
 	return rootCmd
