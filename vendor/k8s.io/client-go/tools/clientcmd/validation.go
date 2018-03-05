@@ -244,7 +244,7 @@ func validateAuthInfo(authInfoName string, authInfo clientcmdapi.AuthInfo) []err
 
 	// ImpersonateGroups or ImpersonateUserExtra should be requested with a user
 	if (len(authInfo.ImpersonateGroups) > 0 || len(authInfo.ImpersonateUserExtra) > 0) && (len(authInfo.Impersonate) == 0) {
-		validationErrors = append(validationErrors, fmt.Errorf("requesting groups or user-extra for %v without impersonating a user", authInfoName))
+		validationErrors = append(validationErrors, fmt.Errorf("requesting groups `%v` len(%v) or user-extra `%v` len(%v) for `%v` without impersonating a user `%v`", authInfo.ImpersonateGroups, len(authInfo.ImpersonateGroups), authInfo.ImpersonateUserExtra, len(authInfo.ImpersonateUserExtra), authInfoName, authInfo.Impersonate))
 	}
 	return validationErrors
 }

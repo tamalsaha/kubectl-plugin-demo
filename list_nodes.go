@@ -12,7 +12,7 @@ import (
 
 func NewCmdListNodes(clientConfig clientcmd.ClientConfig) *cobra.Command {
 	cmd := &cobra.Command{
-		Use:               "list-nodes",
+		Use:               "nodes",
 		Short:             "List nodes",
 		DisableAutoGenTag: true,
 		Run: func(cmd *cobra.Command, args []string) {
