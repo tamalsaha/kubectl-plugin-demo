@@ -13,9 +13,9 @@ import (
 )
 
 func NewRootCmd(plugin bool) *cobra.Command {
-	//var (
-	//	enableAnalytics = true
-	//)
+	var (
+		enableAnalytics = true
+	)
 	var rootCmd = &cobra.Command{
 		Use:               "kubectl-plugin-demo",
 		Short:             `Tamal's kubectl plugin'`,
@@ -32,7 +32,7 @@ func NewRootCmd(plugin bool) *cobra.Command {
 	clientConfig := BindFlags(flags, plugin)
 	// ref: https://github.com/kubernetes/kubernetes/issues/17162#issuecomment-225596212
 	flag.CommandLine.Parse([]string{})
-	// rootCmd.PersistentFlags().BoolVar(&enableAnalytics, "analytics", enableAnalytics, "Send analytical events to Google Analytics")
+	rootCmd.PersistentFlags().BoolVar(&enableAnalytics, "analytics", enableAnalytics, "Test persistent flag at plugin level")
 
 	rootCmd.AddCommand(NewCmdList(clientConfig))
 	rootCmd.AddCommand(NewCmdEnv())
