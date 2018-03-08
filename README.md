@@ -13,7 +13,7 @@ $ kubectl plugin kubectl-plugin-demo
 ```
 
 #### Reading List
-- https://kubernetes.io/docs/tasks/extend-kubectl/kubectl-plugins/#search-order
+- https://kubernetes.io/docs/tasks/extend-kubectl/kubectl-plugins/
 - https://github.com/kubernetes/kubernetes/tree/master/pkg/kubectl/plugins
 - https://github.com/kubernetes/kubernetes/tree/master/test/fixtures/pkg/kubectl/plugins
 
