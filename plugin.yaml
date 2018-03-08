@@ -1,4 +1,0 @@
-name: "tamal"
-shortDesc: "Tamal's kubectl plugin"
-longDesc: "Tamal's kubectl plugin"
-command: ./kubectl-plugin-demo
